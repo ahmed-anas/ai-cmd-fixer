@@ -1,3 +1,3 @@
 export const config = {
-    verbose: true,
+    verbose: false,
 }

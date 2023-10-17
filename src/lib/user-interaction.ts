@@ -35,8 +35,9 @@ export class UserInteraction {
      * Prompt the user for a command to run and fix.
      * @returns A promise that resolves to the user's input.
      */
-    public getDirectory(): Promise<string> {
-        return this.getInput('Please enter directory where the command should be executed: ');
+    public async getDirectory(): Promise<string> {
+        const defaultDir = process.cwd();
+        return (await this.getInput('Please enter directory where the command should be executed. Leave empty to use current dir: ')) || defaultDir;
     }
 
     /**

@@ -25,29 +25,37 @@ export const ReadLinesTool = () => new DynamicStructuredTool({
     const lines = (await fs.readFile(filePath, 'utf-8')).split('\n');
     const counters = { openCurly: 0, openSquare: 0, openParen: 0 };
 
-    let adjustedStartLine = startLine;
-    let adjustedEndLine = endLine;
+    let adjustedStartLine = startLine - 1;
+    let adjustedEndLine = endLine + 1;
 
     // Adjust startLine
-    for (let i = startLine - 1; i >= 0; i--) {
+    for (let i = adjustedStartLine; i >= 0; i--) {
+      adjustedStartLine = i;
       updateCounters(lines[i], counters);
-      if (Object.values(counters).some(count => count < 0)) {
-        adjustedStartLine = i - 1;
-      } else if (Object.values(counters).every(count => count >= 0)) {
+      if (Object.values(counters).every(count => count >= 0)) {
         break;
       }
     }
 
+    // Reset counters  
+    Object.keys(counters).forEach((key: any) => (counters as any)[key as any] = 0);
+
     // Adjust endLine
-    for (let i = adjustedStartLine - 1; i < lines.length && i <= adjustedEndLine; i++) {
+    for (let i = adjustedStartLine; i < lines.length && i <= adjustedEndLine; i++) {
       updateCounters(lines[i], counters);
       if (Object.values(counters).some(count => count !== 0)) {
         adjustedEndLine = i + 1;
       }
     }
 
-    const outputLines = lines.slice(adjustedStartLine - 1, adjustedEndLine).map((line, index) => `${adjustedStartLine + index}: ${line}`);
-    return outputLines.join('\n');
+    console.log(` - Reading ${filePath}:${startLine}-${endLine}`);
+    const outputLines = lines.slice(adjustedStartLine, adjustedEndLine).map((line, index) => `${adjustedStartLine + index + 1}: ${line}`);
+    const toReturn = outputLines.join('\n');
+    console.log('---------------')
+    console.log(toReturn);
+    console.log('---------------')
+
+    return toReturn;
   },
   returnDirect: false
 });

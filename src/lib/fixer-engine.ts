@@ -11,6 +11,7 @@ import { ChatOpenAI } from "langchain/chat_models/openai";
 import { HumanInterventionTool } from "./ai/tools/human-intervention";
 import { RunCommandTool } from "./ai/tools/run-command";
 import { config } from "../config";
+import { EndProcessTool } from "./ai/tools/end-process";
 
 export class AIFixerEngine {
     private userInteraction: UserInteraction;
@@ -29,7 +30,8 @@ export class AIFixerEngine {
             ReadLinesTool(),
             UpdateLinesTool(),
             HumanInterventionTool(),
-            RunCommandTool(command, directory)
+            RunCommandTool(command, directory),
+            EndProcessTool()
         ];
 
         const openApiKey = process.env.OPEN_API_KEY;
@@ -39,7 +41,8 @@ export class AIFixerEngine {
         }
 
         const model = new ChatOpenAI({
-            modelName: 'gpt-3.5-turbo',
+            modelName: 'gpt-4',
+            // modelName: 'gpt-3.5-turbo',
             temperature: 0,
             openAIApiKey: openApiKey,
             verbose: config.verbose,
@@ -63,30 +66,18 @@ export class AIFixerEngine {
 
             // const directory = await this.userInteraction.getDirectory();
             // const command = await this.userInteraction.getCommandInput();
-
             const command = 'npm run lint';
             const directory = `G:/work/personal-code/ai-cmd-fixer/test-project`
+
+            const commandOutput = (await this.cliExecutor.executeCommand(command, directory)).output;
+
             const exector = await this.getExecutor(command, directory);
 
-            const response = await exector.run(`the output for my "npm run lint" command is the following. I want you fix it using the functions you have available.
-
-
-            G:/work/personal-code/ai-cmd-fixer/test-project/src/main.ts
-            3:85  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-            4:3   error  Unnecessary try/catch wrapper             no-useless-catch
-           10:60  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-           16:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-           22:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-         
-         ✖ 5 problems (5 errors, 0 warnings)
-            
+            const response = await exector.run(`the output for my command "${command}" is the following. I want you fix it using the functions you have available.
+${commandOutput}
             `);
 
-
-
             console.log('ai output', response);
-
-
 
             // if (x) {
             //     // 1. Get command input from the user

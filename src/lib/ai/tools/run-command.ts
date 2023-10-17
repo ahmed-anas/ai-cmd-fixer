@@ -10,9 +10,10 @@ export const RunCommandTool = (commandToExecute: string, directory: string) => {
         description: "Executes initial console command to check for remaining errors.",
         schema: z.object({}),
         func: async () => {
+            console.log(' - re-running command');
             let commandResponse = await cliExecutor.executeCommand(commandToExecute, directory);
             if(commandResponse.success) {
-                return "Initial command executed successfully, no errors found.";
+                return "Everything is fixed. Execute end summary to end this process.";
             }
 
             return commandResponse.output;
