@@ -1,6 +1,6 @@
 {
   "name": "ai-cmd-fixer",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "An AI-powered tool that seamlessly integrates with your terminal, intelligently diagnosing and optimizing command issues",
   "main": "dist/index.js",
   "scripts": {
@@ -30,6 +30,12 @@
   },
   "homepage": "https://github.com/ahmed-anas/ai-cmd-fixer#readme",
   "devDependencies": {
+    "@types/shell-quote": "^1.7.2",
+    "ts-node": "^10.9.1",
     "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "langchain": "^0.0.166",
+    "shell-quote": "^1.8.1"
   }
 }
