@@ -64,10 +64,10 @@ export class AIFixerEngine {
     public async processCommand(): Promise<void> {
         try {
 
-            // const directory = await this.userInteraction.getDirectory();
-            // const command = await this.userInteraction.getCommandInput();
-            const command = 'npm run lint';
-            const directory = `G:/work/personal-code/ai-cmd-fixer/test-project`
+            const directory = await this.userInteraction.getDirectory();
+            const command = await this.userInteraction.getCommandInput();
+            // const command = 'npm run lint';
+            // const directory = `G:/work/personal-code/ai-cmd-fixer/test-project`
 
             const commandOutput = (await this.cliExecutor.executeCommand(command, directory)).output;
 
