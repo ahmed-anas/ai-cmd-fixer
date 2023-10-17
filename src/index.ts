@@ -1,3 +1,12 @@
 #!/usr/bin/env node
 
-console.log('hello world');
+import { AIFixerEngine } from "./lib/fixer-engine";
+
+
+async function main() {
+    const engine = new AIFixerEngine();
+
+    await engine.processCommand();
+}
+
+main();
