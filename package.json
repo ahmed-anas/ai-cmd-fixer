@@ -1,6 +1,6 @@
 {
   "name": "ai-cmd-fixer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "An AI-powered tool that seamlessly integrates with your terminal, intelligently diagnosing and optimizing command issues",
   "main": "dist/index.js",
   "scripts": {
