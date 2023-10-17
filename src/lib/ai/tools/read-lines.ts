@@ -22,40 +22,45 @@ export const ReadLinesTool = () => new DynamicStructuredTool({
     endLine: z.number().describe("the line number to stop reading (inclusive).")
   }),
   func: async ({ filePath, startLine, endLine }) => {
-    const lines = (await fs.readFile(filePath, 'utf-8')).split('\n');
-    const counters = { openCurly: 0, openSquare: 0, openParen: 0 };
-
-    let adjustedStartLine = startLine - 1;
-    let adjustedEndLine = endLine + 1;
-
-    // Adjust startLine
-    for (let i = adjustedStartLine; i >= 0; i--) {
-      adjustedStartLine = i;
-      updateCounters(lines[i], counters);
-      if (Object.values(counters).every(count => count >= 0)) {
-        break;
-      }
-    }
-
-    // Reset counters  
-    Object.keys(counters).forEach((key: any) => (counters as any)[key as any] = 0);
-
-    // Adjust endLine
-    for (let i = adjustedStartLine; i < lines.length && i <= adjustedEndLine; i++) {
-      updateCounters(lines[i], counters);
-      if (Object.values(counters).some(count => count !== 0)) {
-        adjustedEndLine = i + 1;
-      }
-    }
-
-    console.log(` - Reading ${filePath}:${startLine}-${endLine}`);
-    const outputLines = lines.slice(adjustedStartLine, adjustedEndLine).map((line, index) => `${adjustedStartLine + index + 1}: ${line}`);
-    const toReturn = outputLines.join('\n');
-    console.log('---------------')
-    console.log(toReturn);
-    console.log('---------------')
-
-    return toReturn;
+    return readLines(filePath, startLine, endLine);
   },
   returnDirect: false
 });
+
+
+export async function readLines(filePath: string, startLine: number, endLine: number) {
+  const lines = (await fs.readFile(filePath, 'utf-8')).split('\n');
+  const counters = { openCurly: 0, openSquare: 0, openParen: 0 };
+
+  let adjustedStartLine = startLine - 1;
+  let adjustedEndLine = endLine + 1;
+
+  // Adjust startLine
+  for (let i = adjustedStartLine; i >= 0; i--) {
+    adjustedStartLine = i;
+    updateCounters(lines[i], counters);
+    if (Object.values(counters).every(count => count >= 0)) {
+      break;
+    }
+  }
+
+  // Reset counters  
+  Object.keys(counters).forEach((key: any) => (counters as any)[key as any] = 0);
+
+  // Adjust endLine
+  for (let i = adjustedStartLine; i < lines.length && i <= adjustedEndLine; i++) {
+    updateCounters(lines[i], counters);
+    if (Object.values(counters).some(count => count !== 0)) {
+      adjustedEndLine = i + 1;
+    }
+  }
+
+  console.log(` - Reading ${filePath}:${adjustedStartLine}-${adjustedEndLine}`);
+  const outputLines = lines.slice(adjustedStartLine, adjustedEndLine).map((line, index) => `${adjustedStartLine + index + 1}: ${line}`);
+  const toReturn = outputLines.join('\n');
+  console.log('---------------')
+  console.log(toReturn);
+  console.log('---------------')
+
+  return toReturn;
+}

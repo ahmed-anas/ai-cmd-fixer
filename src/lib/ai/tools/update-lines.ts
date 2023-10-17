@@ -1,10 +1,11 @@
 import { z } from "zod";
 import fs from "fs/promises";
 import { DynamicStructuredTool } from "langchain/tools";
+import { readLines } from "./read-lines";
 
 export const UpdateLinesTool = () => new DynamicStructuredTool({
     name: "update-lines",
-    description: "Updates specified line range in a text file with new content.",
+    description: "Updates specified line range in a text file with new content. Returns a subset of the file with the updated lines.",
     schema: z.object({
         filePath: z.string().describe("Path to target text file."),
         lineToStartWritingFrom: z.number().describe("Start line number, inclusive. Starts from 1."),
@@ -19,7 +20,10 @@ export const UpdateLinesTool = () => new DynamicStructuredTool({
         const lines = (await fs.readFile(filePath, 'utf-8')).split('\n');
         lines.splice(startLine - 1, endLine - startLine + 1, newContent);
         await fs.writeFile(filePath, lines.join('\n'));
+
+        
         return "Lines updated successfully.";
+        // return "Lines updated successfully." + "\n" + readLines(filePath, startLine, endLine);
     },
     returnDirect: false
 });

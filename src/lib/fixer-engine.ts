@@ -52,6 +52,7 @@ export class AIFixerEngine {
             agentType: "openai-functions",
             verbose: config.verbose,
             agentArgs: {
+                // prefix: 'Act as an experienced software engineer. Apply appropriate methods to debug and resolve the issues in the provided command. Aim to maintain or improve code quality while fixing the error.'
             },
         });
     }

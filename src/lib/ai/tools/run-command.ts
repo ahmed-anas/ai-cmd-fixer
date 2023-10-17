@@ -16,6 +16,11 @@ export const RunCommandTool = (commandToExecute: string, directory: string) => {
                 return "Everything is fixed. Execute end summary to end this process.";
             }
 
+            console.log(' - command output');
+            console.log('------------------');
+            console.log(commandResponse.output);
+            console.log('------------------');
+
             return commandResponse.output;
         },
         returnDirect: false

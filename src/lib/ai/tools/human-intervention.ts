@@ -6,12 +6,12 @@ import { UserInteraction } from "../../user-interaction";
 export const HumanInterventionTool = () => {
     return new DynamicStructuredTool({
         name: "human-intervention",
-        description: "Allows AI to ask clarifying questions to the human user.",
+        description: "Initiates a user interaction for query clarification. Use this tool when ambiguity arises. Do not hesistate to use it.",
         schema: z.object({
-            freeText: z.string().describe("Free text for AI to process and ask questions.")
+            freeText: z.string().describe("Unstructured text that serves as the basis to pose clarification questions.")
         }),
         func: async ({ freeText }) => {
-            return await UserInteraction.get().getInput(`The AI has a question: ${freeText}`);
+            return await UserInteraction.get().getInput(`The AI needs clarification: ${freeText}`);
         },
         returnDirect: false
     });
